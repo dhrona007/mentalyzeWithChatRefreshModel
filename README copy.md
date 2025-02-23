@@ -12,7 +12,6 @@ mentalHealthChatbot/
 │   ├── styles.css
 │   ├── script.js
 │   └── (other static files like images, if any)
-├── templates/
 │   └── index.html
 └── Procfile (for deployment to platforms like Heroku)
 
