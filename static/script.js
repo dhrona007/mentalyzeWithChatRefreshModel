@@ -30,7 +30,13 @@ async function sendMessage(message) {
     if (!response.ok) throw new Error('Failed to fetch response');
     
     const data = await response.json();
-    addMessage('Bot', data.reply);
+    if (data.status === 'question') {
+      // Display the next question
+      addMessage('Bot', data.reply);
+    } else if (data.status === 'analysis') {
+      // Display the analysis
+      addMessage('Bot', data.reply);
+    }
   } catch (error) {
     console.error('Error sending message:', error);
     addMessage('Bot', 'Sorry, something went wrong. Please try again.');
@@ -51,9 +57,15 @@ sendBtn.addEventListener('click', () => {
 
 chatInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') {
-    sendMessage(chatInput.value.trim());
+    const message = chatInput.value.trim();
+    sendMessage(message);
     chatInput.value = '';
   }
 });
 
 emergencyBtn.addEventListener('click', sendEmergencyAlert);
+
+// Ask the first question when the page loads
+window.onload = () => {
+  addMessage('Bot', QUESTIONS[0]);
+};
