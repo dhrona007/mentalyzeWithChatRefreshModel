@@ -32,14 +32,14 @@ async function sendMessage(message) {
     const data = await response.json();
     if (data.status === 'question') {
       // Display the next question
-      addMessage('Bot', data.reply);
+      addMessage('Mentalyze', data.reply);
     } else if (data.status === 'analysis') {
       // Display the analysis
-      addMessage('Bot', data.reply);
+      addMessage('Mentalyze', data.reply);
     }
   } catch (error) {
     console.error('Error sending message:', error);
-    addMessage('Bot', 'Sorry, something went wrong. Please try again.');
+    addMessage('Mentalyze', 'Sorry, something went wrong. Please try again.');
   }
 }
 
@@ -67,5 +67,5 @@ emergencyBtn.addEventListener('click', sendEmergencyAlert);
 
 // Ask the first question when the page loads
 window.onload = () => {
-  addMessage('Bot', QUESTIONS[0]);
+  addMessage('Mentalyze', QUESTIONS[0]);
 };
