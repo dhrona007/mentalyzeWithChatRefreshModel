@@ -1,3 +1,5 @@
+## This readme is for when an API key is used only which is still under active development of project
+
 # Mental Health Check-Up Bot
 
 ## Description
