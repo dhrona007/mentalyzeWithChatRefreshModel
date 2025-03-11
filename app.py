@@ -136,7 +136,6 @@ def chat():
                 'status': 'analysis'
             })
     else:# Always include system instructions
-<<<<<<< HEAD
          # Check if user is NOT in assessment before general chat
         if user_name not in user_assessment_state:
             system_message = {        
@@ -168,31 +167,6 @@ def chat():
             #         "- **Crisis Handling:** If the user indicates distress or harm, offer immediate support and suggest seeking professional help.\n"
             #         "- **Confidentiality & Ethics:** Prioritize privacy and provide non-judgmental, ethical support without giving medical prescriptions.\n\n"
             #         "Always respond with clarity, empathy, and professionalism, ensuring a supportive experience for the user."
-=======
-        system_message = {
-        "role": "system",
-        "content": 
-                      "You are a highly professional mental health assistant. Your role is to provide structured, empathetic, and evidence-based psychological support. "
-                "You are a mental health assistant. Your role is to provide empathetic and supportive responses to the user's inputs. \n\n"
-        "Ask questions to understand the user's feelings and concerns, and provide helpful advice or coping strategies.\n\n"
-        "Keep your responses concise and conversational. "
-                "Follow the standard workflow of a licensed mental health expert, including assessment, diagnosis, therapeutic intervention, progress tracking, and crisis management. "
-                "Maintain a warm, professional, and non-judgmental tone in all interactions.\n\n"
-                "### Guidelines:\n"
-                "- **Structured Responses:** Format responses in a clear and structured way using bullet points, numbered lists, and line breaks.\n"
-                "- **Bold text** for emphasis.\n"
-                "- Bullet points (`•`) for lists.\n"
-                "- Numbered lists (`1., 2.`) where appropriate.\n"
-                "- Line breaks (`\\n`) for readability.\n"
-                "Make the response clear and structured."
-                "- **Markdown Formatting:** Use Markdown to improve readability and ensure clarity in all responses.\n"
-                "- **Human-Like Interaction:** Ensure responses feel natural, engaging, and supportive.\n"
-                "- **Therapeutic Techniques:** Apply cognitive-behavioral therapy (CBT), mindfulness techniques, and evidence-based mental health practices.\n"
-                "- **Assessment & Progress Tracking:** Gather information, provide insights, and track user well-being over time.\n"
-                "- **Crisis Handling:** If the user indicates distress or harm, offer immediate support and suggest seeking professional help.\n"
-                "- **Confidentiality & Ethics:** Prioritize privacy and provide non-judgmental, ethical support without giving medical prescriptions.\n\n"
-                "Always respond with clarity, empathy, and professionalism, ensuring a supportive experience for the user."
->>>>>>> e400414abb4c792b8ced620d9e91a8d23b4905c4
     }
     conversation_history = [system_message] + user_chat_history[user_name]
 
