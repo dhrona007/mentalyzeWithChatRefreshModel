@@ -1,0 +1,333 @@
+:root {
+  --navbar-height: 60px;
+  --primary-color: #007bff;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --text-color: #333;
+  --white: #fff;
+  --black: #000;
+  --background-opacity: 0.7;
+}
+
+input[type=text]:focus {
+  outline: 2px solid transparent;
+  /* oranges! yey */
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Fallback for older browsers */
+  text-size-adjust: 100%;
+  /* Standard property for modern browsers */
+}
+
+/* Styling for Firefox */
+body {
+  scrollbar-color: #fcfcfc transparent;
+  /* Supported in Firefox */
+}
+
+/* Styling for Safari and other WebKit-based browsers */
+body::-webkit-scrollbar {
+  width: 8px;
+  /* Width of the scrollbar */
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: #888;
+  /* Color of the scrollbar thumb */
+  border-radius: 4px;
+  /* Rounded corners for the thumb */
+}
+
+body::-webkit-scrollbar-track {
+  background-color: transparent;
+  /* Transparent track */
+}
+
+/* Fix for background image scrolling on mobile */
+body {
+  font-family: Arial, sans-serif;
+  color: var(--text-color);
+  margin: 0;
+  padding: 10px;
+  line-height: 1.6;
+  opacity: 0.82;
+  scrollbar-width: thin;
+  scrollbar-color: #fcfcfc transparent;
+  background-color: transparent;
+  position: relative;
+  /* Ensure content is positioned correctly */
+  overflow: auto;
+  /* Allow scrolling of the content */
+}
+
+/* Pseudo-element for fixed background */
+body::before {
+  content: '';
+  position: fixed;
+  /* Fix the background */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, var(--background-opacity))),
+    url("https://static.vecteezy.com/system/resources/previews/025/446/274/large_2x/mental-health-happiness-creative-abstract-concept-colorful-illustration-of-male-head-paint-splatter-style-mindfulness-positive-thinking-self-care-idea-banner-white-background-generative-ai-photo.jpg") no-repeat center center;
+  background-size: cover;
+  z-index: -1;
+  /* Place it behind the content */
+}
+
+.navbar {
+  padding-bottom: 30px;
+}
+
+.navbar-toggler:focus {
+  outline: 1px solid white;
+}
+
+/* Hide sections by default */
+.section {
+  display: none;
+}
+
+/* Highlight the active link */
+.nav-link.active {
+
+  color: #71ffff;
+  /* Change this color as per your preference */
+}
+
+/* Navbar spacing for sections */
+
+.button {
+  margin: 5px;
+  min-height: 50px;
+  min-width: 150px;
+}
+
+.buttons-container {
+  justify-items: center;
+}
+
+#chat-input {
+  margin-bottom: 10px;
+  /* Adjust as needed */
+}
+
+#Home,
+#core-objectives,
+#future-goals,
+#aboutUs {
+  padding-top: var(--navbar-height);
+  scroll-margin-top: var(--navbar-height);
+  height: auto;
+}
+
+
+#aboutUs {
+  min-height: 200px;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  text-align: center;
+  padding-top: auto;
+  padding: 20px;
+
+}
+
+.modal-content {
+  background-color: white;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: auto;
+  text-align: center;
+  padding-bottom: 20px;
+  margin: 10px;
+}
+
+.chat-sectionindow {
+  background-color: rgba(7, 5, 0, 0.718);
+  border-radius: 10px;
+}
+
+.mainContent {
+  color: white;
+  padding: 20px;
+  margin: auto;
+  max-width: 800px;
+  opacity: 1;
+  z-index: 1;
+}
+
+.mainContent h1 {
+  font-size: 3rem;
+  margin-bottom: 5px;
+}
+
+.mainContent p {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.mainContent .btn {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.mainContent .btn:hover {
+  background-color: #0056b3;
+}
+
+.container {
+  background: transparent;
+  padding: 10px;
+  padding-bottom: 10px;
+  border-radius: 10px;
+  width: 500px;
+  text-align: center;
+  align-items: center;
+  height: auto;
+}
+
+.chat-sectionindow {
+  background-color: rgba(255, 255, 255, 0.718);
+  border-radius: 10px;
+  width: 100%;
+
+  /* Minimum height to ensure it doesn't collapse */
+  z-index: 1;
+  /* Ensure it doesn't overlap other content */
+}
+
+#chat-messages {
+  max-height: 300px;
+  /* Limit the height of the chat messages area */
+  overflow-y: auto;
+  /* Add scroll if messages exceed the height */
+  margin-bottom: 5px;
+  /* Add space below the chat messages */
+  scrollbar-width: thin;
+  scrollbar-color: #888 transparent;
+  margin-left: 5px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+#chat-messages::-webkit-scrollbar {
+  width: 8px;
+  /* Width of the scrollbar */
+}
+
+#chat-messages::-webkit-scrollbar-thumb {
+  background-color: #888;
+  /* Color of the scrollbar thumb */
+  border-radius: 4px;
+  /* Rounded corners for the thumb */
+}
+
+#chat-messages::-webkit-scrollbar-track {
+  background-color: transparent;
+  /* Transparent track */
+}
+
+#chat-input {
+  width: calc(100% - 90px);
+  padding: 10px;
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Common chat message styling */
+.message {
+  max-width: 70%;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 10px;
+  word-wrap: break-word;
+  font-size: 16px;
+}
+
+/* User messages - aligned to the right */
+.message.You {
+  background-color: #dcf8c6;
+  /* Light green (WhatsApp style) */
+  align-self: flex-end;
+  text-align: right;
+  border-bottom-right-radius: 0;
+}
+
+/* Chatbot messages - aligned to the left */
+.message.Mentalyze {
+  background-color: #ffffff;
+  align-self: flex-start;
+  text-align: left;
+  border-bottom-left-radius: 0;
+  border: 1px solid #ddd;
+}
+
+
+#send-btn {
+  background-color: var(--success-color);
+  color: var(--white);
+}
+
+#emergency-btn {
+  background-color: var(--danger-color);
+  color: var(--white);
+}
+
+#send-btn:hover {
+  background-color: #218838;
+}
+
+#emergency-btn:hover {
+  background-color: #c82333;
+}
+
+.mood-buttons button {
+  background-color: var(--primary-color);
+  color: var(--white);
+  border: none;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.mood-buttons button:hover {
+  background-color: #0056b3;
+}
+
+section {
+  /* margin: 40px auto; */
+  padding: 30px;
+  max-width: 900px;
+  border-radius: 10px;
+  background: var(--white);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+  margin: auto;
+}
+
+.aboutus {
+  margin-bottom: 100px;
+  max-height: 350px;
+}

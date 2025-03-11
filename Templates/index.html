@@ -5,20 +5,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mental Health Chatbot</title>
-    <link rel="stylesheet" href="/static/styles.css">
+    <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
-    <header class="mb-5 pb-5">
+    <header class="">
         <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
             <a class="navbar-brand" href="#Home">MentaLyze</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="true" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="collapse navbar-collapse p-2" id="navbarNavAltMarkup">
+            <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                 <div class="navbar-nav ml-auto">
                     <a class="nav-item nav-link active" href="#Home">Home <span class="sr-only">(current)</span></a>
                     <a class="nav-item nav-link" href="#core-objectives">Aim</a>
@@ -29,7 +29,7 @@
         </nav>
     </header>
     <main>
-        <div id="Home">
+        <div id="Home" class="section">
             <div class="text-center mainContent">
                 <h1>Welcome to MentaLyze!</h1>
                 <p><i>Mentalyze this is a mental health chatbot provides the report about emotional standing</i></p>
@@ -37,26 +37,43 @@
             <section class="container">
                 <!-- Chat Window -->
                 <div class="chat-sectionindow p-5">
-                    <label for="chat-input" class="text-dark text-left mb-3">How are you feeling today?</label>
+                    <h3><label for="chat-input" class="text-dark text-left ">Chat below</label></h3>
                     <!-- Mood Tracking Buttons -->
-                    <div class="mood-buttons d-none">
+                    <!-- <div class="mood-buttons d-none">
                         <button id="happy-btn" class="btn btn-outline-primary">😊 Happy</button>
                         <button id="sad-btn">😢 Sad</button>
                         <button id="anxious-btn">😰 Anxious</button>
-                    </div>
-                    <div id="chat-messages" class="text-left pb-1 text-black ml-5"></div>
-                    <input type="text" type="text" id="chat-input" class="mt-4" autocomplete="off"
-                        placeholder="Enter about your symptoms...">
-                    <div class="d-flex flex-row justify-content-center">
-                        <button id="send-btn" type="sumbit" value="Submit" class="btn btn-success">Send</button>
-                        <!-- Emergency Alert Button -->
-                        <button id="emergency-btn" class="btn btn-danger">🚨 Emergency Alert</button>
+                    </div> -->
+                    <div id="chat-messages" class="text-left pb-1 text-black "></div>
+                    <input type="text" type="text" id="chat-input" name="chat-input" class="mt-4" autocomplete="off"
+                        placeholder="Type your feelings..." autofocus>
+                    <div class="container-fluid mt-2 buttons-container">
+                        <div class="row">
+                            <div class="col-auto mb-2 mr-2">
+                                <button id="start-assessment-btn" class="btn btn-primary button">Start
+                                    Assessment</button>
+                            </div>
+                            <div class="col-auto mb-2 mr-2">
+
+                                <button id="send-btn" type="Submit" value="Submit"
+                                    class="button btn btn-success">Send</button>
+                            </div>
+                            <div class="col-auto mb-2 mr-2 ">
+                                <button id="resetBtn" type="reset" class="button btn btn-info">Reset Chat</button>
+                            </div>
+                            <div class="col-auto mb-2 mr-2">
+                                <!-- Emergency Alert Button -->
+                                <button id="emergency-btn" class="button btn btn-danger">Emergency Alert</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
+
         </div>
 
-        <div class="m-3">
+        <!-- Sections -->
+        <div id="core-objectives" class="section ">
             <section id="core-objectives" class="objectives p-3 mt-5">
                 <h2 class="">Objectives</h2>
                 <ul>
@@ -75,7 +92,8 @@
                         messaging platforms (WhatsApp, Telegram).</li>
                 </ul>
             </section>
-
+        </div>
+        <div id="future-goals" class="section">
             <section id="future-goals" class="mt-5 p-3">
                 <h2>Future Goals</h2>
                 <h5>1️⃣ AI-Powered Speech & Emotion Analysis</h5>
@@ -152,7 +170,8 @@
                         for immediate support.</li>
                 </ul>
             </section>
-
+        </div>
+        <div id="aboutUs" class="section">
             <section class="aboutus text-left mt-5 p-3" id="aboutUs">
                 <h1 class=>About us</h1>
                 <Div>
@@ -165,20 +184,18 @@
                     </p>
                 </Div>
             </section>
-
         </div>
-    </main>
-
-    <script src="/static/script.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
-        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
-        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-        crossorigin="anonymous"></script>
+</body>
+<script src="static/js/script.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+    integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+    integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+    crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+    crossorigin="anonymous"></script>
 </body>
 
 </html>
