@@ -155,11 +155,6 @@ body::before {
   margin: 10px;
 }
 
-.chat-sectionindow {
-  background-color: rgba(7, 5, 0, 0.718);
-  border-radius: 10px;
-}
-
 .mainContent {
   color: white;
   padding: 20px;
@@ -197,37 +192,38 @@ body::before {
 .container {
   background: transparent;
   padding: 10px;
-  padding-bottom: 10px;
   border-radius: 10px;
   width: 500px;
   text-align: center;
   align-items: center;
-  height: auto;
+  height: calc(75vh - var(--navbar-height));
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  margin: 20px auto;
 }
 
 .chat-sectionindow {
   background-color: rgba(255, 255, 255, 0.718);
   border-radius: 10px;
   width: 100%;
-
-  /* Minimum height to ensure it doesn't collapse */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
   z-index: 1;
-  /* Ensure it doesn't overlap other content */
 }
 
 #chat-messages {
-  max-height: 300px;
-  /* Limit the height of the chat messages area */
+  flex-grow: 1;
   overflow-y: auto;
-  /* Add scroll if messages exceed the height */
   margin-bottom: 5px;
-  /* Add space below the chat messages */
   scrollbar-width: thin;
   scrollbar-color: #888 transparent;
   margin-left: 5px;
   padding: 10px;
   display: flex;
   flex-direction: column;
+  min-height: 200px;
 }
 
 #chat-messages::-webkit-scrollbar {
@@ -248,11 +244,11 @@ body::before {
 }
 
 #chat-input {
-  width: calc(100% - 90px);
-  padding: 10px;
   width: 100%;
+  padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  margin-top: auto;
 }
 
 /* Common chat message styling */

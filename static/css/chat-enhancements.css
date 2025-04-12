@@ -1,0 +1,86 @@
+/* Enhanced Chat Interface Styles */
+#voice-btn {
+    background-color: #f8f9fa;
+    border: 1px solid #6c757d;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 1.2rem;
+    color: #495057;
+    margin-left: 10px;
+}
+
+#voice-btn:hover {
+    background-color: #e9ecef;
+    transform: scale(1.05);
+}
+
+#voice-btn.listening {
+    background-color: #dc3545;
+    color: white;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+/* Chat Input Enhancements */
+#chat-input {
+    border-radius: 20px;
+    padding: 12px 20px;
+    border: 1px solid #ced4da;
+    transition: all 0.3s ease;
+    font-size: 1rem;
+}
+
+#chat-input:focus {
+    border-color: #80bdff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+/* Message Bubble Enhancements */
+.message {
+    margin-bottom: 12px;
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: 80%;
+    line-height: 1.4;
+    position: relative;
+    word-wrap: break-word;
+}
+
+.message.You {
+    background-color: #dcf8c6;
+    align-self: flex-end;
+    margin-left: auto;
+    border-bottom-right-radius: 5px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+.message.Mentalyze {
+    background-color: #ffffff;
+    align-self: flex-start;
+    margin-right: auto;
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 1px 1px rgba(0,0,0,0.1);
+}
+
+/* Input Container Styling */
+.input-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+    padding: 10px;
+    background-color: rgba(255,255,255,0.8);
+    border-radius: 20px;
+}

@@ -3,11 +3,13 @@ from flask_cors import CORS
 import requests
 import os
 from dotenv import load_dotenv
+from datetime import datetime
+
 
 # Load environment variables
 load_dotenv()
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='Templates')
 CORS(app)  # Allow all origins for all routes
 
 # Together API settings
@@ -33,6 +35,13 @@ mental_health_questions = [
     "Would you like any resources or guidance on coping strategies for mental well-being?"
 ]
 
+def validate_together_api_key():
+    """Validate the Together API key before making requests."""
+    if not TOGETHER_API_KEY:
+        raise ValueError("Together API key is not configured")
+    if len(TOGETHER_API_KEY) != 64:  # Basic format check
+        raise ValueError("Invalid Together API key format")
+
 def analyze_responses_with_together(conversation_history, assessment_mode=False, answers=None):
     """
     Send conversation history or assessment answers to the Together API for analysis.
@@ -41,48 +50,72 @@ def analyze_responses_with_together(conversation_history, assessment_mode=False,
         conversation_history (list): List of messages for general conversation.
         assessment_mode (bool): If True, analyze assessment answers.
         answers (list): List of user answers for assessment (required if assessment_mode is True).
+    
+    Returns:
+        str: API response content or error message
     """
-    headers = {
-        "Authorization": f"Bearer {TOGETHER_API_KEY}",
-        "Content-Type": "application/json"
-    }
+    try:
+        validate_together_api_key()
+        
+        headers = {
+            "Authorization": f"Bearer {TOGETHER_API_KEY}",
+            "Content-Type": "application/json"
+        }
 
-    if assessment_mode:
-        # Prepare the conversation history for assessment analysis
-        messages = [
-            {
+        if assessment_mode:
+            if not answers or len(answers) != len(mental_health_questions):
+                raise ValueError("Invalid assessment answers provided")
+                
+            messages = [{
                 "role": "system",
                 "content": (
-                    "You are a mental health assistant. Analyze the user's answers to the assessment questions and provide a summary or analysis. "
-                "Focus on identifying patterns, potential issues, and actionable advice. Keep the response structured and empathetic."
+                    "You are a mental health assistant. Analyze the user's answers to the assessment questions and provide:\n"
+                    "1. A structured summary of key findings\n"
+                    "2. Identified patterns or concerns\n"
+                    "3. Actionable advice\n"
+                    "Use markdown formatting for clarity.\n"
+                    "### Guidelines:\n"
+                    "- *Structured Responses:* Format responses clearly using bullet points, numbered lists, and line breaks\n"
+                    "- *Bold text* for emphasis\n"
+                    "- Bullet points (•) for lists\n"
+                    "- Numbered lists (1., 2.) where appropriate\n"
+                    "- Line breaks (\\n) for readability\n"
+                    "- Maintain a warm, professional, and non-judgmental tone"
                 )
-            }
-        ]
+            }]
 
-        # Add the user's answers to the conversation history
-        for i, answer in enumerate(answers):
-            messages.append({
-                "role": "user",
-                "content": f"Question {i + 1}: {mental_health_questions[i]}\nAnswer: {answer}"
-            })
-    else:
-        # Use the provided conversation history for general chat
-        messages = conversation_history
-
-    data = {
-        "model": "mistralai/Mistral-7B-Instruct-v0.1",
-        "messages": messages,
-        "temperature": 0.7
-    }
-
-    try:
-        response = requests.post(TOGETHER_API_URL, headers=headers, json=data)
-        if response.status_code == 200:
-            return response.json()["choices"][0]["message"]["content"]
+            for i, answer in enumerate(answers):
+                messages.append({
+                    "role": "user",
+                    "content": f"Question {i + 1}: {mental_health_questions[i]}\nAnswer: {answer}"
+                })
         else:
-            return f"❌ Error with Together API: {response.status_code} - {response.text}"
+            if not conversation_history:
+                raise ValueError("Empty conversation history")
+            messages = conversation_history
+
+        data = {
+            "model": "mistralai/Mistral-7B-Instruct-v0.1",
+            "messages": messages,
+            "temperature": 0.7,
+            "max_tokens": 1000
+        }
+
+        response = requests.post(TOGETHER_API_URL, headers=headers, json=data, timeout=30)
+        response.raise_for_status()
+        
+        result = response.json()
+        if not result.get("choices"):
+            raise ValueError("Unexpected API response format")
+            
+        return result["choices"][0]["message"]["content"]
+        
+    except requests.exceptions.RequestException as e:
+        return f"⚠️ Service temporarily unavailable. Please try again later. (Error: {str(e)})"
+    except ValueError as e:
+        return f"⚠️ Validation error: {str(e)}"
     except Exception as e:
-        return f"❌ Error with Together API: {e}"
+        return f"⚠️ An unexpected error occurred: {str(e)}"
     
 @app.route('/api/chat', methods=['POST'])
 def chat():
@@ -135,48 +168,51 @@ def chat():
                 'reply': analysis,
                 'status': 'analysis'
             })
-    else:# Always include system instructions
-         # Check if user is NOT in assessment before general chat
-        if user_name not in user_assessment_state:
-            system_message = {        
+    else:
+        # Always include system instructions for general chat
+        system_message = {        
             "role": "system",
             "content": 
-                        "You are a professional mental health assistant. Provide empathetic, supportive responses based on the user's input. "
-            "Offer coping strategies and insights without asking structured questions. "
-            "Maintain a warm, conversational tone. Use markdown formatting for clarity when needed."
-            #               "You are a highly professional mental health assistant. Your role is to provide structured, empathetic, and evidence-based psychological support. "
-            #         "You are a mental health assistant. Your role is to provide empathetic and supportive responses to the user's inputs. \n\n"
-            #         "You are a professional mental health assistant. Provide empathetic, supportive responses based on the user's input. \n\n"
-            # "Offer coping strategies and insights without asking structured questions. \n\n"
-            # "Maintain a warm, conversational tone. Use markdown formatting for clarity when needed.\n\n"
-            # "Analyze the situation of user by asking questions to understand the user's feelings and concerns, and provide helpful advice or coping strategies.\n\n"
-            # "Keep your responses concise and conversational. "
-            #         "Follow the standard workflow of a licensed mental health expert, including assessment, diagnosis, therapeutic intervention, progress tracking, and crisis management. "
-            #         "Maintain a warm, professional, and non-judgmental tone in all interactions.\n\n"
-            #         "### Guidelines:\n"
-            #         "- **Structured Responses:** Format responses in a clear and structured way using bullet points, numbered lists, and line breaks.\n"
-            #         "- **Bold text** for emphasis.\n"
-            #         "- Bullet points (`•`) for lists.\n"
-            #         "- Numbered lists (`1., 2.`) where appropriate.\n"
-            #         "- Line breaks (`\\n`) for readability.\n"
-            #         "Make the response clear and structured."
-            #         "- **Markdown Formatting:** Use Markdown to improve readability and ensure clarity in all responses.\n"
-            #         "- **Human-Like Interaction:** Ensure responses feel natural, engaging, and supportive.\n"
-            #         "- **Therapeutic Techniques:** Apply cognitive-behavioral therapy (CBT), mindfulness techniques, and evidence-based mental health practices.\n"
-            #         "- **Assessment & Progress Tracking:** Gather information, provide insights, and track user well-being over time.\n"
-            #         "- **Crisis Handling:** If the user indicates distress or harm, offer immediate support and suggest seeking professional help.\n"
-            #         "- **Confidentiality & Ethics:** Prioritize privacy and provide non-judgmental, ethical support without giving medical prescriptions.\n\n"
-            #         "Always respond with clarity, empathy, and professionalism, ensuring a supportive experience for the user."
-    }
-    conversation_history = [system_message] + user_chat_history[user_name]
+                "You are a professional mental health assistant. Provide empathetic, supportive responses based on the user's input.\n"
+                "Offer coping strategies and insights without asking structured questions.\n"
+                "Maintain a warm, conversational tone. Use markdown formatting for clarity when needed.\n"
+                "### Guidelines:\n"
+                "- *Structured Responses:* Format responses clearly using bullet points, numbered lists, and line breaks\n"
+                "- *Bold text* for emphasis\n"
+                "- Bullet points (•) for lists\n"
+                "- Numbered lists (1., 2.) where appropriate\n"
+                "- Line breaks (\\n) for readability\n"
+                "- Maintain a warm, professional, and non-judgmental tone"
+        }
+        
+        conversation_history = [system_message] + user_chat_history[user_name]
 
-    # Get AI-generated response
-    bot_reply = analyze_responses_with_together(conversation_history)
+        # Get AI-generated response
+        bot_reply = analyze_responses_with_together(conversation_history)
 
-    # Append bot response to user history
-    user_chat_history[user_name].append({"role": "assistant", "content": bot_reply})
+        # Append bot response to user history
+        user_chat_history[user_name].append({"role": "assistant", "content": bot_reply})
 
-    return jsonify({'reply': bot_reply, 'history': user_chat_history[user_name], 'status': 'response'})
+        # Ensure we always return a properly formatted response
+        if not bot_reply:
+            bot_reply = "I'm sorry, I didn't get a response. Please try again."
+            
+        return jsonify({
+            'status': 'success',
+            'reply': bot_reply,
+            'question': None,  # Explicitly set question to null for non-assessment responses
+            'formatted_reply': f"""
+                <div class='chat-response'>
+                    <p class='response-text'>{bot_reply}</p>
+                    <p class='response-meta'>Response generated at: {datetime.now().strftime('%H:%M')}</p>
+                </div>
+            """,
+            'metadata': {
+                'timestamp': datetime.now().isoformat(),
+                'response_type': 'text',
+                'history_length': len(user_chat_history[user_name])
+            }
+        })
 
 # Dictionary to store user assessment state
 user_assessment_state = {}
@@ -194,11 +230,16 @@ def start_assessment():
     data = request.json
     user_name = data.get("username", "guest")
 
-    # Initialize assessment state for the user
+    # Clear any existing assessment state for this user
+    if user_name in user_assessment_state:
+        del user_assessment_state[user_name]
+
+    # Initialize fresh assessment state for the user
     user_assessment_state[user_name] = {
         "current_question_index": 0,
         "answers": []
     }
+    
     # Start the assessment with the first question
     return jsonify({
         'reply': "Starting your mental health assessment. First question:",
@@ -216,9 +257,94 @@ def get_chat_history():
     history = user_chat_history.get(user_name, [])
     return jsonify({'history': history})
 
+@app.route('/api/clear_history', methods=['POST'])
+def clear_chat_history():
+    """Clear user chat history"""
+    data = request.json
+    user_name = data.get("username", "guest")
+    
+    if user_name in user_chat_history:
+        del user_chat_history[user_name]
+    
+    return jsonify({
+        "status": "success",
+        "message": "Chat history cleared"
+    })
+
+@app.route('/api/clear_assessment', methods=['POST'])
+def clear_assessment_state():
+    """Clear user assessment state"""
+    data = request.json
+    user_name = data.get("username", "guest")
+    
+    if user_name in user_assessment_state:
+        del user_assessment_state[user_name]
+    
+    return jsonify({
+        "status": "success",
+        "message": "Assessment state cleared"
+    })
+
+@app.route('/api/track_mood', methods=['POST'])
+def track_mood():
+    """
+    Track and store user mood data.
+    """
+    data = request.json
+    mood = data.get("mood", "").lower()
+    username = data.get("username", "guest")
+    
+    if not mood or mood not in ["happy", "sad", "anxious"]:
+        return jsonify({"status": "error", "message": "Invalid mood value"}), 400
+    
+    # In a real app, you would store this in a database
+    print(f"User {username} reported feeling {mood}")  # Log for demonstration
+    
+    return jsonify({
+        "status": "success",
+        "message": f"Mood '{mood}' recorded",
+        "suggestion": get_mood_suggestion(mood)
+    })
+
+def get_mood_suggestion(mood):
+    """Return appropriate suggestions based on mood"""
+    suggestions = {
+        "happy": "Great to hear you're feeling happy! Consider journaling about what's making you happy.",
+        "sad": "It's okay to feel sad sometimes. You might try calling a friend or going for a walk.",
+        "anxious": "For anxiety, try deep breathing exercises or mindfulness techniques."
+    }
+    return suggestions.get(mood, "Thank you for sharing how you're feeling.")
+
+from flask import send_from_directory, render_template
+
 @app.route('/')
 def index():
-    return "Welcome to the Mental Health Chatbot Backend using Together API!"
+    """Serve the main frontend interface"""
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        return f"Error rendering template: {str(e)}"
+
+@app.route('/api')
+def api_info():
+    """Provide API information"""
+    return jsonify({
+        'status': 'running',
+        'endpoints': {
+            '/api/chat': 'POST - Handle chat messages',
+            '/api/start_assessment': 'POST - Start mental health assessment',
+            '/api/get_history': 'POST - Get chat history'
+        }
+    })
+
+# Static file serving
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory('static', filename)
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
 
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
